@@ -22,14 +22,15 @@ final class Version20230125141525 extends AbstractMigration
         $platform = $this->connection->getDatabasePlatform();
         $platform->registerDoctrineTypeMapping('enum', 'string');
 
-        $mediaTable = $schema->getTable('ddmedia');
+        $schemaManager = $this->connection->getSchemaManager();
+        $columns = $schemaManager->listTableColumns('ddmedia');
 
-        if (!$mediaTable->hasColumn('DDIMAGESIZE')) {
-            $this->addSql('ALTER TABLE  `ddmedia` ADD  `DDIMAGESIZE` VARCHAR( 100 ) AFTER  `DDTHUMB`;');
+        if (!isset($columns['ddimagesize'])) {
+            $this->addSql('ALTER TABLE `ddmedia` ADD `DDIMAGESIZE` VARCHAR(100) AFTER `DDTHUMB`');
         }
 
-        if (!$mediaTable->hasColumn('OXSHOPID')) {
-            $this->addSql('ALTER TABLE  `ddmedia` ADD `OXSHOPID` INT(10) UNSIGNED NOT NULL AFTER `OXID`;');
+        if (!isset($columns['oxshopid'])) {
+            $this->addSql('ALTER TABLE `ddmedia` ADD `OXSHOPID` INT(10) UNSIGNED NOT NULL AFTER `OXID`');
         }
     }
 

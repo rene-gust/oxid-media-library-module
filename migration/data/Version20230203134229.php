@@ -22,9 +22,10 @@ final class Version20230203134229 extends AbstractMigration
         $platform = $this->connection->getDatabasePlatform();
         $platform->registerDoctrineTypeMapping('enum', 'string');
 
-        $mediaTable = $schema->getTable('ddmedia');
+        $schemaManager = $this->connection->getSchemaManager();
+        $columns = $schemaManager->listTableColumns('ddmedia');
 
-        if (!$mediaTable->hasColumn('DDFOLDERID')) {
+        if (!isset($columns['DDFOLDERID'])) {
             $this->addSql(
                 "ALTER TABLE  `ddmedia` ADD  `DDFOLDERID` CHAR( 32 ) NOT NULL DEFAULT '' AFTER `DDIMAGESIZE`"
             );
